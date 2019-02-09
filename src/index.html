@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="main.bundle.js"></script>
+  </head>
+  <body>
+    <div id="container-screen1">
+      <div class="app-title">Enter Your Info</div>
+
+      <form id="data-form">
+        <label>
+          Annual Income
+          <span class="input-prefix">$</span>
+          <input
+            type="number"
+            name="annualIncome"
+            class="no-spin"
+            min="1"
+            step="0.01"
+            placeholder="70000"
+            required />
+        </label>
+
+        <label>
+          Workdays per week
+          <input
+            class="short-num-input no-spin"
+            type="number"
+            name="workdaysPerWeek"
+            value="5"
+            min="1"
+            max="7"
+            required />
+        </label>
+
+        <label>
+          Hours per workday
+          <input
+            class="short-num-input no-spin"
+            type="number"
+            name="hoursPerDay"
+            value="8"
+            min="1"
+            max="24"
+            step="0.01" />
+        </label>
+
+        <label>
+          <input type="checkbox" name="includeTaxes" id="include-taxes" />
+          Annual Tax&nbsp;
+          (<a
+              href="https://smartasset.com/taxes/income-taxes#tax-calculators"
+              target="_blank">calculator</a>)
+
+          <span class="input-prefix">$</span>
+          <input
+                type="number"
+                id="annual-tax"
+                name="annualTax"
+                class="no-spin"
+                min="1"
+                placeholder="12000"
+                disabled />
+        </label>
+
+        <label>
+          <input type="checkbox" id="already-worked-some" name="alreadyWorkedSome" />
+          I've already worked for
+          <input
+                type="number"
+                id="already-worked-hours"
+                name="alreadyWorkedHours"
+                class="no-spin short-num-input"
+                min="0.01"
+                max="23.99"
+                step="0.01"
+                placeholder="3"
+                disabled />
+          hours today
+        </label>
+
+        <label>
+          <input type="checkbox" name="displayFractionalPennies" checked />
+          Display fractions of pennies
+        </label>
+
+        <button type="submit">START</button>
+      </form>
+    </div>
+
+    <div id="container-screen2">
+      <div id="since-starting-text">
+      </div>
+
+      <div id="cash-display"></div>
+
+      <div id="taxes-paid">
+        and you've paid
+        <span id="taxes-paid-display"></span>
+        in taxes
+      </div>
+    </div>
+  </body>
+</html>

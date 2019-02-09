@@ -1,0 +1,163 @@
+$bg-color: #2B4970;
+$highlight-color: #E8E8E8;
+$secondary-color: #6F84A0;
+$shadow-color: #051F3F;
+$darkest-color: #00070F;
+
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background-color: $bg-color;
+}
+
+#container-screen1, #container-screen2 {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1em 0 1em 0;
+  color: $secondary-color;
+  font-family:
+    "Trebuchet MS",
+    "Lucida Grande",
+    "Lucida Sans Unicode",
+    "Lucida Sans",
+    Tahoma,
+    sans-serif;
+  transition: opacity 1s;
+}
+
+.app-title {
+  margin: 0.5em 0 0.5em 0;
+  font-size: 200%;
+  color: $secondary-color;
+  white-space: nowrap;
+}
+
+#data-form {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  position: relative;
+
+  label {
+    margin: 0.5em;
+    position: relative;
+  }
+
+  .input-prefix {
+    margin-left: 1em;
+  }
+
+  button {
+    margin-top: 2em;
+  }
+}
+
+a {
+  color: $highlight-color;
+}
+
+input {
+  width: 4.5em;
+  border: 0px solid #000000;
+  border-bottom: 2px solid $secondary-color;
+  border-radius: 3px;
+  padding: 0.5em;
+  font-size: 1em;
+  text-align: right;
+  color: $highlight-color;
+  background-color: transparent;
+  transition: border-bottom-color 250ms ease-out;
+
+  &:focus {
+    outline: none;
+    border-bottom-color: $highlight-color;
+  }
+
+  &[type="checkbox"] {
+    width: initial;
+  }
+
+  &:disabled {
+    color: $shadow-color;
+    border-bottom-width: 1px;
+  }
+}
+
+.short-num-input {
+  width: 1.5em;
+  text-align: center;
+}
+
+.no-spin::-webkit-inner-spin-button, .no-spin::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+  -moz-appearance:textfield !important;
+}
+
+button {
+  outline: none;
+  cursor: pointer;
+  min-height: 3em;
+  min-width: 8em;
+  border: none;
+  border-radius: 6px;
+  color: $highlight-color;
+  background-color: $secondary-color;
+  box-shadow: 0 4px $shadow-color;
+
+  &:active {
+    box-shadow: 0 2px $shadow-color;
+    transform: translateY(2px);
+  }
+}
+
+#container-screen2 {
+  display: none;
+  opacity: 0;
+
+  #since-starting-text {
+    font-size: 120%;
+    margin: 1em;
+  }
+
+  #cash-display {
+    color: $highlight-color;
+  }
+
+  #taxes-paid {
+    display: none;
+  }
+
+  #taxes-paid-display {
+    display: inline-block;
+    min-width: 5em;
+    text-align: center;
+    margin-top: 0.5em;
+  }
+}
+
+/** Mobile Layout **/
+@media only screen and (min-device-width: 1px) {
+  body {
+    font-size: 85%;
+  }
+
+  #cash-display {
+    font-size: 300%;
+  }
+}
+
+/** Desktop Layout **/
+@media only screen and (min-device-width: 500px) {
+  body {
+    font-size: 100%;
+  }
+
+  #cash-display {
+    font-size: 500%;
+  }
+}

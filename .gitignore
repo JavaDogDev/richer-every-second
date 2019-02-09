@@ -1,0 +1,5 @@
+# Built JS
+build/
+
+# Dependencies
+node_modules/
