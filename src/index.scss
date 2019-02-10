@@ -5,8 +5,10 @@ $shadow-color: #051F3F;
 $darkest-color: #00070F;
 
 body {
+  display: flex;
+  justify-content: center;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   margin: 0;
   background-color: $bg-color;
 }
@@ -15,9 +17,7 @@ body {
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
-  justify-content: center;
 
-  padding: 1em 0 1em 0;
   color: $secondary-color;
   font-family:
     "Trebuchet MS",
@@ -116,8 +116,27 @@ button {
 }
 
 #container-screen2 {
+  flex: 1 1 auto;
+  position: relative;
   display: none;
   opacity: 0;
+
+  * {
+    // Render everything above the 3D container
+    z-index: 5;
+  }
+
+  #three-container {
+    display: flex;
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+    z-index: 1;
+
+    canvas {
+      flex: 1 0 100%;
+    }
+  }
 
   #since-starting-text {
     font-size: 120%;

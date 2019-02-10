@@ -1,6 +1,7 @@
 import Cookies from 'js-cookie';
 
 import CurrentMoney from './current-money';
+import init3dScene from './3d-scene';
 import './index.scss';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -71,9 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     Cookies.set('res-data', newCookie, { expires: 365 });
 
-    // eslint-disable-next-line no-use-before-define
-    initScreen2();
-
     // Launch second screen
     screen1.addEventListener('transitionend', (e) => {
       if (e.propertyName === 'opacity') {
@@ -86,6 +84,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
     screen1.style.opacity = 0;
+
+    // eslint-disable-next-line no-use-before-define
+    initScreen2();
   });
 
   /* Screen 2 */
@@ -154,5 +155,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     setInterval(updateDisplay.bind(this), UPDATE_FREQUENCY_MS);
+
+    // CSS Transition (or something) makes this return 0 if I do it without setTimeout
+    setTimeout(init3dScene, 1250);
   }
 });
