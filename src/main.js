@@ -1,4 +1,6 @@
 import Cookies from 'js-cookie';
+
+import CurrentMoney from './current-money';
 import './index.scss';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -135,17 +137,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
-      if (form.includeTaxes.checked) {
-        // eslint-disable-next-line prefer-template
-        taxesPaidDisplay.innerHTML = '$' + roundNum(
-          taxes,
-          (form.displayFractionalPennies.checked) ? 4 : 2);
-      }
-
-      // eslint-disable-next-line prefer-template
-      cashDisplay.innerHTML = '$' + roundNum(
+      income = roundNum(
         income,
         (form.displayFractionalPennies.checked) ? 4 : 2);
+      taxes = roundNum(
+        taxes,
+        (form.displayFractionalPennies.checked) ? 4 : 2);
+
+      CurrentMoney.update(income, taxes);
+
+      if (form.includeTaxes.checked) {
+        taxesPaidDisplay.innerHTML = `$${CurrentMoney.getTaxes()}`;
+      }
+
+      cashDisplay.innerHTML = `$${CurrentMoney.getIncome()}`;
     }
 
     setInterval(updateDisplay.bind(this), UPDATE_FREQUENCY_MS);
