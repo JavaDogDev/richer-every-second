@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setInterval(updateDisplay.bind(this), UPDATE_FREQUENCY_MS);
 
-    // CSS Transition (or something) makes this return 0 if I do it without setTimeout
+    // CSS Transition (or something) makes scene sized 0 by 0 if I call this without setTimeout
     setTimeout(init3dScene, 1250);
   }
 });
