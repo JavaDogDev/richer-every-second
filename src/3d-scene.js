@@ -1,4 +1,9 @@
-import * as BABYLON from '@babylonjs/core/Legacy/legacy';
+import { Engine } from '@babylonjs/core/Engines/engine';
+import { Scene } from '@babylonjs/core/scene';
+import { Vector3, Color3 } from '@babylonjs/core/Maths/math';
+import { FreeCamera } from '@babylonjs/core/Cameras/freeCamera';
+import { HemisphericLight } from '@babylonjs/core/Lights/hemisphericLight';
+import { Mesh } from '@babylonjs/core/Meshes/mesh';
 
 import '@babylonjs/core/Materials/standardMaterial';
 import '@babylonjs/core/Meshes/meshBuilder';
@@ -7,23 +12,23 @@ import '@babylonjs/core/Meshes/meshBuilder';
 
 export default function init3dScene() {
   const canvas = document.getElementById('babylon-container');
-  const engine = new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true });
+  const engine = new Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true });
 
   function createScene() {
-    const scene = new BABYLON.Scene(engine);
-    scene.clearColor = new BABYLON.Color3(0.169, 0.286, 0.439);
+    const scene = new Scene(engine);
+    scene.clearColor = new Color3(0.169, 0.286, 0.439);
 
-    const camera = new BABYLON.FreeCamera('camera1', new BABYLON.Vector3(0, 5, -10), scene);
-    camera.setTarget(BABYLON.Vector3.Zero());
+    const camera = new FreeCamera('camera1', new Vector3(0, 5, -10), scene);
+    camera.setTarget(Vector3.Zero());
     camera.attachControl(canvas, false);
 
-    const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), scene);
+    const light = new HemisphericLight('light', new Vector3(0, 1, 0), scene);
     light.intensity = 0.7;
 
-    const sphere = BABYLON.Mesh.CreateSphere('sphere1', 16, 2, scene, false, BABYLON.Mesh.FRONTSIDE);
+    const sphere = Mesh.CreateSphere('sphere1', 16, 2, scene, false, Mesh.FRONTSIDE);
     sphere.position.y = 1;
 
-    BABYLON.Mesh.CreateGround('ground1', 6, 6, 2, scene, false);
+    Mesh.CreateGround('ground1', 6, 6, 2, scene, false);
     return scene;
   }
   const scene = createScene();
