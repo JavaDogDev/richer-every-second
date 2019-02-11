@@ -5,6 +5,7 @@ const PRODUCTION = false;
 
 module.exports = {
   mode: PRODUCTION ? 'production' : 'development',
+  devtool: PRODUCTION ? undefined : 'inline-cheap-source-map',
   target: 'web',
 
   entry: [
@@ -45,6 +46,7 @@ module.exports = {
   plugins: [
     new CopyWebpackPlugin([
       { from: 'src/*.html', flatten: true },
+      { from: 'src/3d-models/*.obj', to: '3d-models/', flatten: true },
     ]),
   ],
 
@@ -53,5 +55,5 @@ module.exports = {
 
   devServer: {
     contentBase: path.join(__dirname, 'build'),
-  }
+  },
 };

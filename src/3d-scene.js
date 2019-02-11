@@ -1,43 +1,54 @@
-import * as three from 'three';
-import physijs from 'whitestormjs-physijs';
+import * as BABYLON from '@babylonjs/core/Legacy/legacy';
+
+import '@babylonjs/core/Materials/standardMaterial';
+import '@babylonjs/core/Meshes/meshBuilder';
+
+// import load3dModels from './load-3d-models';
 
 export default function init3dScene() {
-  const threeContainer = document.getElementById('three-container');
-  const scene = new three.Scene();
-  const camera = new three.PerspectiveCamera(75, threeContainer.offsetWidth / threeContainer.offsetHeight, 0.1, 1000);
-  const renderer = new three.WebGLRenderer({ antialias: true });
-  const axesHelper = new three.AxesHelper(5);
-  scene.add(axesHelper);
+  const canvas = document.getElementById('babylon-container');
+  const engine = new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true });
 
-  scene.background = new three.Color(0x2B4970);
-  threeContainer.appendChild(renderer.domElement);
+  function createScene() {
+    const scene = new BABYLON.Scene(engine);
+    scene.clearColor = new BABYLON.Color3(0.169, 0.286, 0.439);
 
-  camera.position.set(-15, 10, 15);
-  camera.lookAt(scene.position);
+    const camera = new BABYLON.FreeCamera('camera1', new BABYLON.Vector3(0, 5, -10), scene);
+    camera.setTarget(BABYLON.Vector3.Zero());
+    camera.attachControl(canvas, false);
 
-  const geometry = new three.BoxGeometry(1, 1, 1);
-  const material = new three.MeshBasicMaterial({ color: 0x00ff00 });
-  const cube = new three.Mesh(geometry, material);
-  scene.add(cube);
+    const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, 0), scene);
+    light.intensity = 0.7;
 
-  function animate() {
-    requestAnimationFrame(animate);
+    const sphere = BABYLON.Mesh.CreateSphere('sphere1', 16, 2, scene, false, BABYLON.Mesh.FRONTSIDE);
+    sphere.position.y = 1;
 
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
-
-    renderer.render(scene, camera);
+    BABYLON.Mesh.CreateGround('ground1', 6, 6, 2, scene, false);
+    return scene;
   }
-  animate();
+  const scene = createScene();
+
+  engine.runRenderLoop(() => {
+    scene.render();
+  });
+
+  // Load 3D models
+  // load3dModels()
+  //   .then((models) => {
+  //     console.log(models);
+  //     models.forEach((model, index) => {
+  //       scene.add(model);
+  //       model.position.set(index * 2, 2, 0);
+  //     });
+  //   })
+  //   .catch(err => console.error(`Problem loading 3D models:\n${err}`));
+
 
   // Resize renderer on container resize
   function onResize() {
-    camera.aspect = threeContainer.offsetWidth / threeContainer.offsetHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(threeContainer.offsetWidth, threeContainer.offsetHeight);
-    console.log(`${threeContainer.offsetWidth}, ${threeContainer.offsetHeight}`);
+    engine.resize();
   }
 
-  onResize();
   window.addEventListener('resize', onResize.bind(this), false);
+  onResize();
 }
