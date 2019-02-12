@@ -37,7 +37,6 @@ export default function init3dScene() {
   // Load 3D models
   load3dModels(scene)
     .then((models) => {
-      console.log(models);
       models.forEach((model, index) => {
         console.log(model, index);
       });
