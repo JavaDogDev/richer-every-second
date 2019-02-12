@@ -1,14 +1,15 @@
 import { Engine } from '@babylonjs/core/Engines/engine';
 import { Scene } from '@babylonjs/core/scene';
 import { Vector3, Color3 } from '@babylonjs/core/Maths/math';
-import { FreeCamera } from '@babylonjs/core/Cameras/freeCamera';
-import { HemisphericLight } from '@babylonjs/core/Lights/hemisphericLight';
+import { ArcRotateCamera } from '@babylonjs/core/Cameras/arcRotateCamera';
+import { PointLight } from '@babylonjs/core/Lights/pointLight';
 import { Mesh } from '@babylonjs/core/Meshes/mesh';
 
 import '@babylonjs/core/Materials/standardMaterial';
 import '@babylonjs/core/Meshes/meshBuilder';
 
 import load3dModels from './load-3d-models';
+
 
 export default function init3dScene() {
   const canvas = document.getElementById('babylon-container');
@@ -17,12 +18,13 @@ export default function init3dScene() {
   function createScene() {
     const scene = new Scene(engine);
     scene.clearColor = new Color3(0.169, 0.286, 0.439);
+    scene.ambientColor = new Color3(1, 1, 1);
 
-    const camera = new FreeCamera('camera', new Vector3(0, 5, -10), scene);
+    const camera = new ArcRotateCamera('camera', 0, 0, 10, new Vector3(0, 5, -10), scene);
     camera.setTarget(Vector3.Zero());
     camera.attachControl(canvas, false);
 
-    const light = new HemisphericLight('light', new Vector3(0, 1, 0), scene);
+    const light = new PointLight('light', new Vector3(0, 5, -5), scene);
     light.intensity = 0.7;
 
     Mesh.CreateGround('ground', 6, 6, 2, scene, false);
