@@ -47,6 +47,7 @@ module.exports = {
     new CopyWebpackPlugin([
       { from: 'src/*.html', flatten: true },
       { from: 'src/3d-models/*.obj', to: '3d-models/', flatten: true },
+      { from: 'src/3d-models/*.mtl', to: '3d-models/', flatten: true },
     ]),
   ],
 
