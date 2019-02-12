@@ -18,7 +18,6 @@ export default function init3dScene() {
   function createScene() {
     const scene = new Scene(engine);
     scene.clearColor = new Color3(0.169, 0.286, 0.439);
-    scene.ambientColor = new Color3(1, 1, 1);
 
     const camera = new ArcRotateCamera('camera', 0, 0, 10, new Vector3(0, 5, -10), scene);
     camera.setTarget(Vector3.Zero());
