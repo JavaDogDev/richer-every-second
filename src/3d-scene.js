@@ -8,8 +8,10 @@ import { Mesh } from '@babylonjs/core/Meshes/mesh';
 import '@babylonjs/core/Materials/standardMaterial';
 import '@babylonjs/core/Meshes/meshBuilder';
 
-import load3dModels from './load-3d-models';
+import '@babylonjs/core/Debug/debugLayer';
+import '@babylonjs/inspector';
 
+import load3dModels from './load-3d-models';
 
 export default function init3dScene() {
   const canvas = document.getElementById('babylon-container');
@@ -30,6 +32,10 @@ export default function init3dScene() {
     return scene;
   }
   const scene = createScene();
+
+  scene.debugLayer.show({
+    overlay: true,
+  });
 
   engine.runRenderLoop(() => {
     scene.render();

@@ -1,27 +1,27 @@
-import { OBJFileLoader } from '@babylonjs/loaders/OBJ';
-import { Vector3, Color3 } from '@babylonjs/core/Maths/math';
+import '@babylonjs/loaders/STL';
 import { SceneLoader } from '@babylonjs/core/Loading/sceneLoader';
+import { Vector3, Color3 } from '@babylonjs/core/Maths/math';
 import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
 
-OBJFileLoader.MATERIAL_LOADING_FAILS_SILENTLY = true;
-
 export default function load3dModels(scene) {
-  const modelPaths = new Map();
-  modelPaths.set('1c', '1c.obj');
-  modelPaths.set('5c', '5c.obj');
-  modelPaths.set('10c', '10c.obj');
+  const silverCoin = new StandardMaterial('silverCoin', scene);
+  silverCoin.diffuseColor = new Color3(0.627, 0.651, 0.667);
 
-  const material = new StandardMaterial('coinMaterial', scene);
-  material.diffuseColor = new Color3(1, 1, 1);
+  const bronzeCoin = new StandardMaterial('bronzeCoin', scene);
+  bronzeCoin.diffuseColor = new Color3(0.722, 0.451, 0.2);
 
-  return Promise.all([...modelPaths.keys()].map(
-    name => SceneLoader.ImportMeshAsync(null, '3d-models/', modelPaths.get(name), scene)
+  const toLoad = new Map();
+  toLoad.set('1c', { path: '1c.stl', material: bronzeCoin });
+  toLoad.set('5c', { path: '5c.stl', material: silverCoin });
+  toLoad.set('10c', { path: '10c.stl', material: silverCoin });
+
+  return Promise.all([...toLoad.keys()].map(
+    name => SceneLoader.ImportMeshAsync(null, '3d-models/', toLoad.get(name).path, scene)
       .then((result) => {
         const mesh = result.meshes[0];
-        mesh.scaling = new Vector3(0.2, 0.2, 0.2);
-        mesh.position = new Vector3(0, 0, 0);
+        mesh.scaling = new Vector3(0.1, 0.1, 0.1);
         mesh.addRotation(0, 180, 0);
-        mesh.material = material;
+        mesh.material = toLoad.get(name).material;
         return mesh;
       })
       .catch(err => console.error(`Error while loading 3D model '${name}':\n${err}`))));
