@@ -2,6 +2,7 @@ import '@babylonjs/loaders/STL';
 import { SceneLoader } from '@babylonjs/core/Loading/sceneLoader';
 import { Vector3, Color3 } from '@babylonjs/core/Maths/math';
 import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
+import { PhysicsImpostor } from '@babylonjs/core/Physics/physicsImpostor';
 
 export default function load3dModels(scene) {
   const silverCoin = new StandardMaterial('silverCoin', scene);
@@ -19,9 +20,13 @@ export default function load3dModels(scene) {
     name => SceneLoader.ImportMeshAsync(null, '3d-models/', toLoad.get(name).path, scene)
       .then((result) => {
         const mesh = result.meshes[0];
-        mesh.scaling = new Vector3(0.1, 0.1, 0.1);
         mesh.addRotation(0, 180, 0);
         mesh.material = toLoad.get(name).material;
+        mesh.physicsImpostor = new PhysicsImpostor(
+          mesh,
+          PhysicsImpostor.BoxImpostor,
+          { mass: 25, restitution: 0.2 },
+          scene);
         return mesh;
       })
       .catch(err => console.error(`Error while loading 3D model '${name}':\n${err}`))));

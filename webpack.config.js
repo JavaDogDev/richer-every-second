@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const PRODUCTION = false;
@@ -44,6 +45,9 @@ module.exports = {
   },
 
   plugins: [
+    new webpack.ProvidePlugin({
+      OIMO: 'OIMO',
+    }),
     new CopyWebpackPlugin([
       { from: 'src/*.html', flatten: true },
       { from: 'src/3d-models/*.stl', to: '3d-models/', flatten: true },
