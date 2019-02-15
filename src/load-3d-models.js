@@ -1,6 +1,6 @@
 import '@babylonjs/loaders/STL';
 import { SceneLoader } from '@babylonjs/core/Loading/sceneLoader';
-import { Vector3, Color3 } from '@babylonjs/core/Maths/math';
+import { Color3 } from '@babylonjs/core/Maths/math';
 import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
 import { PhysicsImpostor } from '@babylonjs/core/Physics/physicsImpostor';
 
@@ -21,6 +21,7 @@ export default function load3dModels(scene) {
       .then((result) => {
         const mesh = result.meshes[0];
         mesh.addRotation(0, 180, 0);
+        mesh.position.set(15, 15, 15);
         mesh.material = toLoad.get(name).material;
         mesh.physicsImpostor = new PhysicsImpostor(
           mesh,

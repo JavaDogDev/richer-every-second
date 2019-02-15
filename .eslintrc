@@ -11,6 +11,7 @@
     "no-underscore-dangle": "off",
     "max-len": "off",
     "no-plusplus": "off",
-    "no-prototype-builtins": "off"
+    "no-prototype-builtins": "off",
+    "no-param-reassign": "off"
   }
 }

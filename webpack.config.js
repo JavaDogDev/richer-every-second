@@ -46,7 +46,7 @@ module.exports = {
 
   plugins: [
     new webpack.ProvidePlugin({
-      OIMO: 'OIMO',
+      OIMO: 'oimo',
     }),
     new CopyWebpackPlugin([
       { from: 'src/*.html', flatten: true },
