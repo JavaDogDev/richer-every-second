@@ -85,7 +85,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     screen1.style.opacity = 0;
 
-    // eslint-disable-next-line no-use-before-define
     initScreen2();
   });
 

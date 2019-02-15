@@ -15,7 +15,10 @@ import '@babylonjs/core/Materials/standardMaterial';
 import '@babylonjs/core/Debug/debugLayer';
 import '@babylonjs/inspector';
 
+import currentMoney from './current-money';
 import load3dModels from './load-3d-models';
+
+const COLLISION_GROUP = 1;
 
 export default function init3dScene() {
   const canvas = document.getElementById('babylon-container');
@@ -35,6 +38,7 @@ export default function init3dScene() {
     const ground = MeshBuilder.CreateBox('ground', { size: 60, height: 5 }, scene);
     ground.physicsImpostor = new PhysicsImpostor(ground, PhysicsImpostor.BoxImpostor, { mass: 0, restitution: 0.2 }, scene);
     ground.isVisible = false;
+    ground.collisionGroup = COLLISION_GROUP;
 
     // build 4 containment walls around scene
     const walls = [];
@@ -66,21 +70,71 @@ export default function init3dScene() {
     scene.render();
   });
 
+  /** Map of currency value -> array of mesh objects active in scene */
+  const activeModels = new Map();
+
   // Load 3D models
   load3dModels(scene)
-    .then((models) => {
-      models.forEach((model, index) => {
-        // model.position.set(0, (index * 3) + 20, 0);
-      });
+    // Add/remove models as necessary
+    .then((origMeshes) => {
+      [...origMeshes.keys()].forEach(availableValue => activeModels.set(availableValue, []));
+      scene.registerBeforeRender(updateActiveModels.bind(this, origMeshes, scene));
     })
     .catch(err => console.error(`Problem loading 3D models:\n${err}`));
-
 
   // Resize renderer on container resize
   function onResize() {
     engine.resize();
   }
-
   window.addEventListener('resize', onResize.bind(this), false);
   onResize();
+
+  /** Adds new 3d money models to scene, removes unneeded ones */
+  function updateActiveModels(origMeshes, sceneRef) {
+    const valuesToShow = currentMoney.getChangeAmounts([...origMeshes.keys()]);
+
+    // TODO nickels have a bug... just watch the screen
+    [...activeModels.keys()].forEach((currencyValue) => {
+      if (valuesToShow.get(currencyValue) < activeModels.get(currencyValue).length) {
+        const numToDelete = activeModels.get(currencyValue).length - valuesToShow.get(currencyValue);
+        const meshesToDelete = activeModels.get(currencyValue).splice(0, numToDelete);
+        removeMoneyFromScene(meshesToDelete);
+      } else if (valuesToShow.get(currencyValue) > activeModels.get(currencyValue).length) {
+        const numToAdd = valuesToShow.get(currencyValue) - activeModels.get(currencyValue).length;
+        const addedMeshes = addMoneyToScene(origMeshes.get(currencyValue), numToAdd, sceneRef);
+        activeModels.set(currencyValue, [...activeModels.get(currencyValue), ...addedMeshes]);
+      }
+    });
+  }
+
+  function addMoneyToScene(origMesh, count, sceneRef) {
+    const createdMeshes = [];
+    for (let i = 0; i < count; i++) {
+      const newInstance = origMesh.createInstance();
+      newInstance.position.set(0, 10, 0);
+      newInstance.physicsImpostor = new PhysicsImpostor(
+        newInstance,
+        PhysicsImpostor.CylinderImpostor,
+        { mass: 25, restitution: 0.2, friction: 0.7 },
+        sceneRef);
+      createdMeshes.push(newInstance);
+    }
+    return createdMeshes;
+  }
+
+  function removeMoneyFromScene(meshes) {
+    // disable collision
+    // apply a little random spin
+    // .dispose() mesh after 3 seconds
+    meshes.forEach((mesh) => {
+      // TODO disable collision somehow
+      const randomSpin = new Vector3(rndNum(0, 5), rndNum(0, 5), rndNum(0, 5));
+      mesh.physicsImpostor.applyImpulse(randomSpin, mesh.getAbsolutePosition().add(new Vector3(0, 3, 0)));
+      setTimeout(mesh.dispose(), 3000);
+    });
+  }
+}
+
+function rndNum(min, max) {
+  return Math.floor(Math.random() * max) + min;
 }
