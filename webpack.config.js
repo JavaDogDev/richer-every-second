@@ -56,8 +56,4 @@ module.exports = {
 
   // Disable stupid "oh no app > 244 KiB" warning
   performance: { hints: false },
-
-  devServer: {
-    contentBase: path.join(__dirname, 'build'),
-  },
 };

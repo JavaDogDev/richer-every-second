@@ -95,11 +95,17 @@ export default function init3dScene() {
 
     // TODO nickels have a bug... just watch the screen
     [...activeModels.keys()].forEach((currencyValue) => {
-      if (valuesToShow.get(currencyValue) < activeModels.get(currencyValue).length) {
+      if (!valuesToShow.has(currencyValue)) {
+        // Shouldn't be showing any of this currencyValue, remove all
+        const meshesToDelete = activeModels.get(currencyValue).splice(0);
+        removeMoneyFromScene(meshesToDelete);
+      } else if (valuesToShow.get(currencyValue) < activeModels.get(currencyValue).length) {
+        // Should be showing fewer of this currencyValue than we are, remove some
         const numToDelete = activeModels.get(currencyValue).length - valuesToShow.get(currencyValue);
         const meshesToDelete = activeModels.get(currencyValue).splice(0, numToDelete);
         removeMoneyFromScene(meshesToDelete);
       } else if (valuesToShow.get(currencyValue) > activeModels.get(currencyValue).length) {
+        // Should be showing more than we are, add some
         const numToAdd = valuesToShow.get(currencyValue) - activeModels.get(currencyValue).length;
         const addedMeshes = addMoneyToScene(origMeshes.get(currencyValue), numToAdd, sceneRef);
         activeModels.set(currencyValue, [...activeModels.get(currencyValue), ...addedMeshes]);
