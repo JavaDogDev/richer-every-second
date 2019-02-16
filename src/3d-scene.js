@@ -8,8 +8,6 @@ import { PointLight } from '@babylonjs/core/Lights/pointLight';
 import { MeshBuilder } from '@babylonjs/core/Meshes/meshBuilder';
 import { AxesViewer } from '@babylonjs/core/Debug/axesViewer';
 
-import '@babylonjs/core/Physics/Plugins/cannonJSPlugin';
-
 import '@babylonjs/core/Materials/standardMaterial';
 
 import '@babylonjs/core/Debug/debugLayer';
@@ -18,8 +16,6 @@ import '@babylonjs/inspector';
 import currentMoney from './current-money';
 import load3dModels from './load-3d-models';
 
-const COLLISION_GROUP = 1;
-
 export default function init3dScene() {
   const canvas = document.getElementById('babylon-container');
   const engine = new Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true });
@@ -27,7 +23,7 @@ export default function init3dScene() {
   function createScene() {
     const scene = new Scene(engine);
     scene.clearColor = new Color3(0.169, 0.286, 0.439);
-    scene.enablePhysics(new Vector3(0, -30, 0), new OimoJSPlugin());
+    scene.enablePhysics(new Vector3(0, -65, 0), new OimoJSPlugin());
 
     const camera = new ArcRotateCamera('camera', (-Math.PI / 2), 1.5, 185, new Vector3(0, 15, 100), scene);
     camera.attachControl(canvas, false);
@@ -35,23 +31,22 @@ export default function init3dScene() {
     const light = new PointLight('light', new Vector3(0, 50, -50), scene);
     light.intensity = 0.9;
 
-    const ground = MeshBuilder.CreateBox('ground', { size: 60, height: 5 }, scene);
-    ground.physicsImpostor = new PhysicsImpostor(ground, PhysicsImpostor.BoxImpostor, { mass: 0, restitution: 0.2 }, scene);
+    const ground = MeshBuilder.CreateBox('ground', { size: 60, height: 25 }, scene);
+    ground.physicsImpostor = new PhysicsImpostor(ground, PhysicsImpostor.BoxImpostor, { mass: 0, restitution: 0.2, friction: 1 }, scene);
     ground.isVisible = false;
-    ground.collisionGroup = COLLISION_GROUP;
 
     // build 4 containment walls around scene
     const walls = [];
-    walls.push(new MeshBuilder.CreateBox('backWall', { width: 60, height: 100, depth: 5 }, scene));
-    walls.push(new MeshBuilder.CreateBox('frontWall', { width: 60, height: 100, depth: 5 }, scene));
-    walls.push(new MeshBuilder.CreateBox('leftWall', { width: 5, height: 100, depth: 60 }, scene));
-    walls.push(new MeshBuilder.CreateBox('rightWall', { width: 5, height: 100, depth: 60 }, scene));
+    walls.push(new MeshBuilder.CreateBox('backWall', { width: 60, height: 100, depth: 25 }, scene));
+    walls.push(new MeshBuilder.CreateBox('frontWall', { width: 60, height: 100, depth: 25 }, scene));
+    walls.push(new MeshBuilder.CreateBox('leftWall', { width: 25, height: 100, depth: 60 }, scene));
+    walls.push(new MeshBuilder.CreateBox('rightWall', { width: 25, height: 100, depth: 60 }, scene));
     walls[0].position.set(0, 50, 32);
     walls[1].position.set(0, 50, -32);
     walls[2].position.set(-32, 50, 0);
     walls[3].position.set(32, 50, 0);
     walls.forEach((wall) => {
-      wall.physicsImpostor = new PhysicsImpostor(wall, PhysicsImpostor.BoxImpostor, { mass: 0, restitution: 0.2 }, scene);
+      wall.physicsImpostor = new PhysicsImpostor(wall, PhysicsImpostor.BoxImpostor, { mass: 0, restitution: 0.2, friction: 1 }, scene);
       wall.isVisible = false;
     });
 
@@ -75,7 +70,6 @@ export default function init3dScene() {
 
   // Load 3D models
   load3dModels(scene)
-    // Add/remove models as necessary
     .then((origMeshes) => {
       [...origMeshes.keys()].forEach(availableValue => activeModels.set(availableValue, []));
       scene.registerBeforeRender(updateActiveModels.bind(this, origMeshes, scene));
@@ -117,27 +111,21 @@ export default function init3dScene() {
     const createdMeshes = [];
     for (let i = 0; i < count; i++) {
       const newInstance = origMesh.createInstance();
-      newInstance.position.set(0, 10, 0);
+      newInstance.position.set(rndNum(-20, 20), rndNum(55, 75), rndNum(-20, 20));
       newInstance.physicsImpostor = new PhysicsImpostor(
         newInstance,
         PhysicsImpostor.CylinderImpostor,
         { mass: 25, restitution: 0.2, friction: 0.7 },
         sceneRef);
+      const randomSpin = new Vector3(rndNum(0, 5), rndNum(0, 5), rndNum(0, 5));
+      newInstance.physicsImpostor.applyImpulse(randomSpin, newInstance.getAbsolutePosition().add(new Vector3(0, 3, 0)));
       createdMeshes.push(newInstance);
     }
     return createdMeshes;
   }
 
   function removeMoneyFromScene(meshes) {
-    // disable collision
-    // apply a little random spin
-    // .dispose() mesh after 3 seconds
-    meshes.forEach((mesh) => {
-      // TODO disable collision somehow
-      const randomSpin = new Vector3(rndNum(0, 5), rndNum(0, 5), rndNum(0, 5));
-      mesh.physicsImpostor.applyImpulse(randomSpin, mesh.getAbsolutePosition().add(new Vector3(0, 3, 0)));
-      setTimeout(mesh.dispose(), 3000);
-    });
+    meshes.forEach(mesh => mesh.dispose());
   }
 }
 

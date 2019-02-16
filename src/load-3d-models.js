@@ -26,6 +26,7 @@ export default function load3dModels(scene) {
         mesh.position.set(-150, -150, -150);
         mesh.material = toLoad.get(currencyValue).material;
         mesh.isVisible = false;
+        mesh.alpha = 1;
         return { mesh, currencyValue };
       })
       .catch(err => console.error(`Error while loading 3D model '${currencyValue}':\n${err}`))))
