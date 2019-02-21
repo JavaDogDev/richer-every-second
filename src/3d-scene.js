@@ -87,7 +87,6 @@ export default function init3dScene() {
   function updateActiveModels(origMeshes, sceneRef) {
     const valuesToShow = currentMoney.getChangeAmounts([...origMeshes.keys()]);
 
-    // TODO nickels have a bug... just watch the screen
     [...activeModels.keys()].forEach((currencyValue) => {
       if (!valuesToShow.has(currencyValue)) {
         // Shouldn't be showing any of this currencyValue, remove all
