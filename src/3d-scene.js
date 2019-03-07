@@ -1,3 +1,5 @@
+import '@babylonjs/core/Animations/animatable';
+import '@babylonjs/core/Physics/physicsEngineComponent';
 import { Engine } from '@babylonjs/core/Engines/engine';
 import { Scene } from '@babylonjs/core/scene';
 import { Vector3, Color3 } from '@babylonjs/core/Maths/math';
@@ -6,11 +8,6 @@ import { PhysicsImpostor } from '@babylonjs/core/Physics/physicsImpostor';
 import { OimoJSPlugin } from '@babylonjs/core/Physics/Plugins/oimoJSPlugin';
 import { PointLight } from '@babylonjs/core/Lights/pointLight';
 import { MeshBuilder } from '@babylonjs/core/Meshes/meshBuilder';
-
-// Appears that this needs to be imported for side-effects in order to
-// use scene.enablePhysics. I opened a bug here: https://forum.babylonjs.com/t/1750
-import '@babylonjs/inspector';
-import '@babylonjs/core/Materials/standardMaterial';
 
 import currentMoney from './current-money';
 import load3dModels from './load-3d-models';
