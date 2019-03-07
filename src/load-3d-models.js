@@ -1,5 +1,7 @@
-import '@babylonjs/loaders/OBJ';
+import { OBJFileLoader } from '@babylonjs/loaders/OBJ';
 import { SceneLoader } from '@babylonjs/core/Loading/sceneLoader';
+
+OBJFileLoader.INVERT_Y = true;
 
 /**
  * @returns a Map of currencyValue:number => Mesh
