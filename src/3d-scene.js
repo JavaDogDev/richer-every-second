@@ -113,7 +113,24 @@ export default function init3dScene() {
   }
 
   function removeMoneyFromScene(meshes) {
-    meshes.forEach(mesh => mesh.dispose());
+    meshes.forEach((mesh) => {
+      // remove existing physics impostor and replace with a new one
+      // that has a different set of collision flags
+      mesh.physicsImpostor.dispose();
+      mesh.physicsImpostor = new PhysicsImpostor(
+        mesh,
+        PhysicsImpostor.CylinderImpostor,
+        { mass: 25, restitution: 0.2, friction: 0.7 },
+        mesh.getScene());
+
+      mesh.physicsImpostor.physicsBody.shapes.belongsTo = 4;
+      mesh.physicsImpostor.physicsBody.shapes.collidesWith = 4;
+
+      // Apply a random spin, then delete the object after a while
+      const randomSpin = new Vector3(rndNum(0, 5), rndNum(0, 5), rndNum(0, 5));
+      mesh.physicsImpostor.applyImpulse(randomSpin, mesh.getAbsolutePosition().add(new Vector3(0, 3, 0)));
+      setTimeout(() => mesh.dispose(), 2500);
+    });
   }
 }
 
