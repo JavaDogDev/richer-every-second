@@ -122,7 +122,6 @@ export default function init3dScene() {
         PhysicsImpostor.CylinderImpostor,
         { mass: 25, restitution: 0.2, friction: 0.7 },
         mesh.getScene());
-
       mesh.physicsImpostor.physicsBody.shapes.belongsTo = 4;
       mesh.physicsImpostor.physicsBody.shapes.collidesWith = 4;
 

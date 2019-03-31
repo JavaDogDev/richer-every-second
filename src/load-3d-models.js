@@ -11,6 +11,7 @@ export default function load3dModels(scene) {
   toLoad.set(0.01, { path: '1c.obj' });
   toLoad.set(0.05, { path: '5c.obj' });
   toLoad.set(0.10, { path: '10c.obj' });
+  toLoad.set(0.25, { path: '25c.obj' });
 
   return Promise.all([...toLoad.keys()].map(
     currencyValue => SceneLoader.ImportMeshAsync(null, '3d-models/', toLoad.get(currencyValue).path, scene)
